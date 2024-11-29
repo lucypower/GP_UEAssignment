@@ -3,6 +3,8 @@
 
 #include "CellularAutomata.h"
 
+#include "MarchingSquares.h"
+
 // Sets default values
 ACellularAutomata::ACellularAutomata()
 {
@@ -33,8 +35,10 @@ void ACellularAutomata::BeginPlay()
 			}
 		}
 	}
+
+	m_MS->MarchSquares();
 	
-	InstantiateGrid();
+	//InstantiateGrid();
 }
 
 // Called every frame

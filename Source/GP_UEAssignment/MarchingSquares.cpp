@@ -15,7 +15,6 @@ AMarchingSquares::AMarchingSquares()
 void AMarchingSquares::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -27,9 +26,9 @@ void AMarchingSquares::Tick(float DeltaTime)
 
 void AMarchingSquares::MarchSquares()
 {
-	for (int i = 0; i < m_CA->m_width - 1; i++)
+	for (int i = 0; i < (m_CA->m_width - 1); i++)
 	{
-		for (int j = 0; j < m_CA->m_height; j++)
+		for (int j = 0; j < (m_CA->m_height - 1); j++)
 		{
 			float a = m_CA->m_grid[i][j];
 			float b = m_CA->m_grid[i + 1][j];
@@ -51,6 +50,7 @@ void AMarchingSquares::CreateTriangles(int a, int b, int c, int d, int offsetX, 
 	int total = (a * 8) + (b * 4) + (c * 2) + (d * 1);
 
 	TArray<FVector> localVertices;
+	TArray<FVector2D> tempLocalVertices;
 	TArray<int> localTriangles;
 
 	int vertexCount = m_vertices.Num();
@@ -160,8 +160,10 @@ void AMarchingSquares::CreateTriangles(int a, int b, int c, int d, int offsetX, 
 
 	case 15:
 
-		localVertices = {FVector(0, 0, 0), FVector(0, 1, 0), FVector(1, 1, 0), FVector(1, 0, 0)};
+		tempLocalVertices = {FVector2D(0, 0), FVector2D(0, 1), FVector2D(1, 1), FVector2D(1, 0)};
 		localTriangles = {0, 1, 2, 0, 2, 3};
+
+		CreateShape(tempLocalVertices, FVector2D(offsetX, offsetY));
 
 		break;
 	}
@@ -177,3 +179,5 @@ void AMarchingSquares::CreateTriangles(int a, int b, int c, int d, int offsetX, 
 		m_triangles.Add(t + vertexCount);
 	}
 }
+
+

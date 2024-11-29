@@ -42,7 +42,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateShape(const TArray<FVector2D>& vertices, const FVector2D& location);
-	
+
 
 protected:
 	// Called when the game starts or when spawned

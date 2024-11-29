@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "CellularAutomata.generated.h"
 
+class AMarchingSquares;
+
 UCLASS()
 class GP_UEASSIGNMENT_API ACellularAutomata : public AActor
 {
@@ -15,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ACellularAutomata();
 
+	AMarchingSquares* m_MS;
+	
 	TArray<TArray<int>> m_grid, m_tempNewGrid;	
 
 	TArray<FVector> m_openSpaces; // TODO: idk if this is right
