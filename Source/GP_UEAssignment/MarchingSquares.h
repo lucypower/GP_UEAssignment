@@ -28,6 +28,17 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "MarchingSquares")
 	TArray<int> m_triangles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MS Cube")
+	TArray<TSubclassOf<AActor>> m_actorToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MS Cube")
+	TArray<UStaticMesh*> m_staticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata Cube")
+	TSubclassOf<AActor> m_blackCube;
+
+	
 	
 	//functions
 	
@@ -42,6 +53,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void CreateShape(const TArray<FVector2D>& vertices, const FVector2D& location);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnCaseActors(const int total, const FVector2D location);
+	//void SpawnCaseActors(const int actorCase, const FVector2D location);
 
 
 protected:
