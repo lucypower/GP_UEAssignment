@@ -3,6 +3,12 @@
 
 #include "CellularAutomata.h"
 
+#include "MarchingSquares.h"
+
+int ACellularAutomata::m_gHeight;
+int ACellularAutomata::m_gWidth;
+TArray<TArray<int>> ACellularAutomata::m_gGrid;
+
 // Sets default values
 ACellularAutomata::ACellularAutomata()
 {
@@ -15,6 +21,9 @@ ACellularAutomata::ACellularAutomata()
 void ACellularAutomata::BeginPlay()
 {
 	Super::BeginPlay();
+
+	m_gHeight = m_height;	
+	m_gWidth = m_width;
 
 	GenerateGrid();
 
@@ -31,10 +40,14 @@ void ACellularAutomata::BeginPlay()
 			{
 				m_grid[i][j] = 1;
 			}
+
+			m_gGrid[i][j] = m_grid[i][j];
 		}
 	}
-	
-	InstantiateGrid();
+
+	//m_MS->MarchSquares();
+	MarchSquares();
+	//InstantiateGrid();
 }
 
 // Called every frame
@@ -56,6 +69,13 @@ void ACellularAutomata::GenerateGrid()
 	m_tempNewGrid.SetNum(m_width);
 
 	for (TArray<int>& currentRow : m_tempNewGrid)
+	{
+		currentRow.SetNum(m_height);
+	}
+
+	m_gGrid.SetNum(m_width);
+	
+	for (TArray<int>& currentRow : m_gGrid)
 	{
 		currentRow.SetNum(m_height);
 	}
@@ -129,4 +149,33 @@ void ACellularAutomata::InstantiateGrid()
 			}
 		}
 	}
+}
+
+void ACellularAutomata::MarchSquares()
+{
+	for (int i = 0; i < (m_width - 1); i++)
+	{
+		for (int j = 0; j < (m_height - 1); j++)
+		{
+			float a = m_grid[i][j];
+			float b = m_grid[i + 1][j];
+			float c = m_grid[i + 1][j + 1];
+			float d = m_grid[i][j + 1];
+
+			CreateTriangles(GetHeight(a), GetHeight(b), GetHeight(c), GetHeight(d), i, j);
+		}
+	}
+}
+
+int ACellularAutomata::GetHeight(float value)
+{
+	return value < 0.5f ? 0 : 1;
+}
+
+void ACellularAutomata::CreateTriangles(int a, int b, int c, int d, int offsetX, int offsetY)
+{
+	int total = (a * 8) + (b * 4) + (c * 2) + (d * 1);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Case: "), total);
+	SpawnCaseActors(total, FVector2D(offsetX, offsetY));
 }

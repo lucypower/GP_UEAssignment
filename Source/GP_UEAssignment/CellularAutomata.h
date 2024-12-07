@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "CellularAutomata.generated.h"
 
+class AMarchingSquares;
+
 UCLASS()
 class GP_UEASSIGNMENT_API ACellularAutomata : public AActor
 {
@@ -15,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ACellularAutomata();
 
+	AMarchingSquares* m_MS;
+	
 	TArray<TArray<int>> m_grid, m_tempNewGrid;	
 
 	TArray<FVector> m_openSpaces; // TODO: idk if this is right
@@ -30,10 +34,17 @@ public:
 	float m_density = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata Cube")
-	TSubclassOf<AActor> m_whiteCube;
+	TSubclassOf<AActor> m_blackCube;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata Cube")
-	TSubclassOf<AActor> m_blackCube;
+	TSubclassOf<AActor> m_whiteCube;
+
+	static int m_gHeight;
+	static int m_gWidth;
+	static TArray<TArray<int>> m_gGrid;
+
+	TArray<int> m_gridWidth;
+	TArray<int> m_gridHeight;
 	
 	// Functions
 	
@@ -49,6 +60,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetNeighbouringWallCount(int x, int y);
 
+	UFUNCTION(BlueprintCallable)
+	void MarchSquares();
+
+	UFUNCTION(BlueprintCallable)
+	int GetHeight(float value);
+
+	UFUNCTION(BlueprintCallable)
+	void CreateTriangles(int a, int b, int c, int d, int offsetX, int offsetY);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnCaseActors(const int total, const FVector2D location);
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
