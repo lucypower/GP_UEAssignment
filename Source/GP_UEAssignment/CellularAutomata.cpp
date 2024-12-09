@@ -5,16 +5,11 @@
 
 #include "MarchingSquares.h"
 
-int ACellularAutomata::m_gHeight;
-int ACellularAutomata::m_gWidth;
-TArray<TArray<int>> ACellularAutomata::m_gGrid;
-
 // Sets default values
 ACellularAutomata::ACellularAutomata()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -22,12 +17,10 @@ void ACellularAutomata::BeginPlay()
 {
 	Super::BeginPlay();
 
-	m_gHeight = m_height;	
-	m_gWidth = m_width;
 
-	GenerateGrid();
+	//GenerateGrid();
 
-	for (int i = 0; i < m_iterations; i++)
+	/*for (int i = 0; i < m_iterations; i++)
 	{
 		IterateGrid();
 	}
@@ -43,10 +36,10 @@ void ACellularAutomata::BeginPlay()
 
 			m_gGrid[i][j] = m_grid[i][j];
 		}
-	}
+	}*/
 
 	//m_MS->MarchSquares();
-	MarchSquares();
+	//MarchSquares();
 	//InstantiateGrid();
 }
 
@@ -57,8 +50,11 @@ void ACellularAutomata::Tick(float DeltaTime)
 
 }
 
-void ACellularAutomata::GenerateGrid()
+void ACellularAutomata::GenerateGrid(int width, int height, float density)
 {
+	m_width = width;
+	m_height = height;
+	
 	m_grid.SetNum(m_width);
 
 	for (TArray<int>& currentRow : m_grid)
@@ -73,39 +69,35 @@ void ACellularAutomata::GenerateGrid()
 		currentRow.SetNum(m_height);
 	}
 
-	m_gGrid.SetNum(m_width);
-	
-	for (TArray<int>& currentRow : m_gGrid)
-	{
-		currentRow.SetNum(m_height);
-	}
-
 	for (int i = 0; i < m_width; i++)
 	{
 		for (int j = 0; j < m_height; j++)
 		{
-			m_grid[i][j] = FMath::RandRange(0, 100) > m_density ? 0 : 1;
+			m_grid[i][j] = FMath::RandRange(0, 100) > density ? 0 : 1;
 		}
 	}
 }
 
-void ACellularAutomata::IterateGrid()
+void ACellularAutomata::IterateGrid(int iterations)
 {
-	for (int i = 0; i < m_width; i++)
+	for (int k = 0; k < iterations; k++)
 	{
-		for (int j = 0; j < m_height; j++)
+		for (int i = 0; i < m_width; i++)
 		{
-			int neighbouringWalls = GetNeighbouringWallCount(i, j);
+			for (int j = 0; j < m_height; j++)
+			{
+				int neighbouringWalls = GetNeighbouringWallCount(i, j);
 
-			m_tempNewGrid[i][j] = neighbouringWalls > 4 ? 1 : 0;
+				m_tempNewGrid[i][j] = neighbouringWalls > 4 ? 1 : 0;
+			}
 		}
-	}
 
-	for (int i = 0; i < m_width; i++)
-	{
-		for (int j = 0; j < m_height; j++)
+		for (int i = 0; i < m_width; i++)
 		{
-			m_grid[i][j] = m_tempNewGrid[i][j];
+			for (int j = 0; j < m_height; j++)
+			{
+				m_grid[i][j] = m_tempNewGrid[i][j];
+			}
 		}
 	}
 }
@@ -130,6 +122,23 @@ int ACellularAutomata::GetNeighbouringWallCount(int x, int y)
 	
 	return neighbouringWalls;
 }
+
+TArray<TArray<int>> ACellularAutomata::FinaliseGrid()
+{
+	for (int i = 0; i < m_width; i++)
+	{
+		for (int j = 0; j < m_height; j++)
+		{
+			if (i == 0 || j == 0 || i == m_width - 1 || j == m_height - 1)
+			{
+				m_grid[i][j] = 1;
+			}
+		}
+	}
+
+	return m_grid;
+}
+
 
 void ACellularAutomata::InstantiateGrid()
 {
