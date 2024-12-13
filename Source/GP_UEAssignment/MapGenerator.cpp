@@ -21,7 +21,7 @@ void AMapGenerator::BeginPlay()
 	FinaliseGrid();
 
 	GetRegionsAndEdges();
-	
+
 	MarchSquares();
 }
 
@@ -115,6 +115,32 @@ void AMapGenerator::FinaliseGrid()
 		}
 	}
 }
+
+void AMapGenerator::FindOpenSpaces()
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			int neighbours = GetNeighbouringWallCount(i, j);
+
+			if (grid[i][j] == 0 && neighbours == 0)
+			{
+				openSpaces.Add(FVector(i, j, 0.5f));
+			}
+		}
+	}
+}
+
+FVector AMapGenerator::ReturnRandomSpace()
+{
+	FindOpenSpaces();
+	
+	int random = FMath::RandRange(0, openSpaces.Num() - 1);
+
+	return openSpaces[random];
+}
+
 
 // regions + edges
 
@@ -386,7 +412,15 @@ void AMapGenerator::ConnectRooms(FVector2D startCoord, FVector2D endCoord)
 
 			if (!isnan(y))
 			{
-				grid[x][y] = 0;
+				for (int j = x - 1; j <= x + 1; j++)
+				{
+					for (int k = y - 1; k <= y + 1; k++)
+					{
+						grid[j][k] = 0;
+					}
+				}
+				
+				/*grid[x][y] = 0;
 				grid[x + 1][y] = 0;
 				grid[x - 1][y] = 0;
 
@@ -398,8 +432,8 @@ void AMapGenerator::ConnectRooms(FVector2D startCoord, FVector2D endCoord)
 					grid[x - 1][y + 1] = 0;
 					grid[x + 1][y - 1] = 0;
 					grid[x + 1][y + 1] = 0;
-				}
-			}
+				}*/
+			}			
 		}
 	}
 }
