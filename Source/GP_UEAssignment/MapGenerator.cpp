@@ -23,6 +23,8 @@ void AMapGenerator::BeginPlay()
 	GetRegionsAndEdges();
 
 	MarchSquares();
+
+	FindOpenSpaces();
 }
 
 void AMapGenerator::Tick(float DeltaTime)
@@ -116,7 +118,7 @@ void AMapGenerator::FinaliseGrid()
 	}
 }
 
-void AMapGenerator::FindOpenSpaces()
+TArray<FVector> AMapGenerator::FindOpenSpaces()
 {
 	for (int i = 0; i < width; i++)
 	{
@@ -126,19 +128,21 @@ void AMapGenerator::FindOpenSpaces()
 
 			if (grid[i][j] == 0 && neighbours == 0)
 			{
-				openSpaces.Add(FVector(i, j, 0.5f));
+				openSpaces.Add(FVector(i * 100, j * 100, 0.5f));
 			}
 		}
 	}
+
+	return openSpaces;
 }
 
-FVector AMapGenerator::ReturnRandomSpace()
+FVector AMapGenerator::GetRandomOpenSpace()
 {
-	FindOpenSpaces();
-	
 	int random = FMath::RandRange(0, openSpaces.Num() - 1);
-
-	return openSpaces[random];
+	FVector spawn = openSpaces[random];
+	openSpaces.RemoveAt(random);
+	
+	return spawn;
 }
 
 

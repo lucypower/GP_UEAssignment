@@ -44,12 +44,12 @@ public:
 
 	void IterateGrid();
 
-	int GetNeighbouringWallCount(int x, int y);
+	int GetNeighbouringWallCount(int x, int y);	
 
-	void FindOpenSpaces();
+	TArray<FVector> FindOpenSpaces();
 
-	UFUNCTION(BlueprintCallable, Category = "Spawn Player")
-	FVector ReturnRandomSpace();
+	UFUNCTION(BlueprintCallable)
+	FVector GetRandomOpenSpace();
 
 	// find regions + edges
 
