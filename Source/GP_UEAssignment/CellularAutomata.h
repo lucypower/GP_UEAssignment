@@ -6,8 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "CellularAutomata.generated.h"
 
-class AMarchingSquares;
-
 UCLASS()
 class GP_UEASSIGNMENT_API ACellularAutomata : public AActor
 {
@@ -16,50 +14,35 @@ class GP_UEASSIGNMENT_API ACellularAutomata : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACellularAutomata();
-
-	AMarchingSquares* m_MS;
 	
 	TArray<TArray<int>> m_grid, m_tempNewGrid;	
-
-	TArray<FVector> m_openSpaces; // TODO: idk if this is right
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata")
 	int m_height = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata")
 	int m_width = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata")
-	int m_iterations = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata")
-	float m_density = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata Cube")
 	TSubclassOf<AActor> m_blackCube;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata Cube")
 	TSubclassOf<AActor> m_whiteCube;
-
-	static int m_gHeight;
-	static int m_gWidth;
-	static TArray<TArray<int>> m_gGrid;
-
-	TArray<int> m_gridWidth;
-	TArray<int> m_gridHeight;
 	
 	// Functions
 	
 	UFUNCTION(BlueprintCallable)
-	void GenerateGrid();
+	void GenerateGrid(int width, int height, float density);
 
 	UFUNCTION(BlueprintCallable)
-	void IterateGrid();
+	void IterateGrid(int iterations);
 
 	UFUNCTION(BlueprintCallable)
 	void InstantiateGrid();
-	
-	UFUNCTION(BlueprintCallable)
+		
 	int GetNeighbouringWallCount(int x, int y);
 
+	TArray<TArray<int>> FinaliseGrid();
+	
+// 
+	
 	UFUNCTION(BlueprintCallable)
 	void MarchSquares();
 
