@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CellularAutomata")
 	float density = 0.0f;
 
+	UPROPERTY(BlueprintReadOnly, Category = "CellularAutomata")
+	TArray<FVector> openSpaces;
+
 	TArray<TArray<int>> grid, tempNewGrid;
 
 	int corridorIterations = 0;
@@ -41,7 +44,12 @@ public:
 
 	void IterateGrid();
 
-	int GetNeighbouringWallCount(int x, int y);
+	int GetNeighbouringWallCount(int x, int y);	
+
+	TArray<FVector> FindOpenSpaces();
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetRandomOpenSpace();
 
 	// find regions + edges
 
